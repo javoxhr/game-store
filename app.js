@@ -1,4 +1,16 @@
 const cardsWrapper = document.querySelector('.cards-wrapper')
+const menuBody = document.querySelector('.menu-body')
+const openMenu = document.querySelector('.open-menu')
+const closeMenu = document.querySelector('.menu-close')
+const openMunuBtn = document.querySelector('.cart-btn')
+
+openMunuBtn.addEventListener('click', ()=> {
+    openMenu.style.right = '0'
+})
+
+closeMenu.addEventListener('click', ()=> {
+    openMenu.style.right = '-100%'
+})
 
 const products = [
     {
@@ -39,14 +51,31 @@ const products = [
     }
 ]
 
+const dontProduct = document.querySelector('.dont-product')
+
+dontProduct.style.display = 'none'
+
 const cartProduct = []
 
-products.forEach((el)=> {
+function cartLength() {
+    if(cartProduct.length) {
+        console.log('yes')
+        dontProduct.style.display = 'none'
+    } else {
+        console.log('now')
+        dontProduct.style.display = 'flex'
+    }
+}
+
+cartLength()
+
+products.forEach((el) => {
     const product = {
         img: el.img,
         title: el.title,
         price: el.price,
         date: el.date,
+        quantity: 1,
     }
     cartProduct.push(product)
     cardsWrapper.innerHTML += `
@@ -66,9 +95,21 @@ products.forEach((el)=> {
 
 const addToCartBtn = document.querySelectorAll('.add-to-cart')
 
-addToCartBtn.forEach((el, i)=> {
-    el.addEventListener('click', ()=> {
-        console.log(cartProduct)
+addToCartBtn.forEach((el, i) => {
+    el.addEventListener('click', () => {
+        const product = cartProduct[i]
+        cartLength()
+        console.log(product)
+        menuBody.innerHTML += `
+        <div class="cart-item">
+          <div class="cart-item-wrap">
+            <img class="cart-item-img" src="${product.img}" alt="">
+            <h1 class="cart-item-title">${product.title}</h1>
+            <span class="cart-item-price">${product.price}</span>
+          </div>
+        </div>
+        `
+        localStorage.setItem('cart', JSON.stringify(product))
     })
 })
 
