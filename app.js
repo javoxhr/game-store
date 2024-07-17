@@ -74,8 +74,7 @@ function cartLength() {
 }
 
 cartLength()
-
-products.forEach((el) => {
+function addToCartFunc(el) {
     const product = {
         img: el.img,
         title: el.title,
@@ -84,6 +83,10 @@ products.forEach((el) => {
         quantity: el.quantity,
     }
     cartProduct.push(product)
+    localStorage.setItem('cart', JSON.stringify(cartProduct))
+
+}
+products.forEach((el) => {
     cardsWrapper.innerHTML += `
     <div class="card">
       <img class="card-img" src="${el.img}" alt="${el.title}">
@@ -92,7 +95,7 @@ products.forEach((el) => {
         <span class="card-price">${el.price}$</span>
       </div>
       <div class="card-btns-wrapper">
-        <button class="add-to-cart">add to cart</button>
+        <button class="add-to-cart" >add to cart</button>
       </div>
       <span class="card-date">${el.date}</span>
     </div>
@@ -101,11 +104,29 @@ products.forEach((el) => {
 
 const addToCartBtn = document.querySelectorAll('.add-to-cart')
 
+cartProduct.forEach(product => {
+    menuBody.innerHTML += `
+        <div class="cart-item">
+            <img class="card-img" src="${product.img}" alt="${product.title}">
+           <div class="card-text-wrapper">
+             <h1 class="card-title">${product.title}</h1>
+             <span class="card-price">${product.price}$</span>
+           </div>
+           <div class="card-btns-wrapper cart-btns">
+             <button class="rem-quan">-</button>
+             <span>${product.quantity}</span>
+             <button class="add-quan">+</button>
+           </div>
+           <span class="card-date">${product.date}</span>
+        </div>
+        `
+})
+
 
 addToCartBtn.forEach((el, i) => {
     el.addEventListener('click', () => {
-        const product = cartProduct[i]
-        cartLength()
+        addToCartFunc(products[i])
+        const product = cartProduct.find(element => element.title == products[i].title)
         menuBody.innerHTML += `
         <div class="cart-item">
             <img class="card-img" src="${product.img}" alt="${product.title}">
@@ -126,10 +147,9 @@ addToCartBtn.forEach((el, i) => {
 
         addQuan.forEach((el) => {
             el.addEventListener('click', () => {
-                
+
             })
         })
-        localStorage.setItem('cart', JSON.stringify(cartProduct))
     })
 })
 
